@@ -91,8 +91,9 @@ func resourceLocalFileCreate(d *schema.ResourceData, _ interface{}) error {
 		return err
 	}
 
-	checksum := sha1.Sum([]byte(content))
-	d.SetId(hex.EncodeToString(checksum[:]))
+	filenameChecksum := sha1.Sum([]byte(destination))
+	contentChecksum := sha1.Sum([]byte(content))
+	d.SetId(hex.EncodeToString(append(filenameChecksum[:], contentChecksum[:]...)))
 
 	return nil
 }
